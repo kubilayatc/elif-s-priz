@@ -33,6 +33,12 @@
       display: block;
     }
 
+    .kapak-img {
+      width: 100%;
+      margin-top: 15px;
+      border-radius: 12px;
+    }
+
     button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -53,6 +59,18 @@
       margin-top: 20px;
       font-size: 15px;
     }
+
+    /* ✨ Soft animasyon */
+    .fade {
+      opacity: 0;
+      transform: scale(0.96);
+      transition: all 0.4s ease;
+    }
+
+    .fade.show {
+      opacity: 1;
+      transform: scale(1);
+    }
   </style>
 </head>
 
@@ -61,32 +79,37 @@
   <div class="card">
     <h2>🐣 Selam Cankuşumm</h2>
 
-    <img id="surprizResim" src="elif1.jpeg" alt="Sürpriz" class="surpriz-img">
+    <!-- Değişen ana resim -->
+    <img id="surprizResim" src="elif1.jpeg" alt="Sürpriz"
+         class="surpriz-img fade show">
 
     <p>Bugün yüzün gülsün diye küçük bir sürpriz bırakıyorum buraya.</p>
 
+    <!-- Sabit kapak resmi -->
+    <img src="kapak.jpeg" alt="Kapak" class="kapak-img">
+
     <button id="buton" onclick="surpriz()">Tıkla bakalım 👀</button>
 
-    <div class="message" id="mesaj"></div>
+    <div class="message fade show" id="mesaj"></div>
   </div>
 
   <script>
     const icerikler = [
       {
         mesaj: "Bugün saçın güzel olmuş olabilir. Kontrol etmedim ama ihtimali çok yüksek 😄",
-        resim: "elif2.jpeg"
+        resim: "elif1.jpeg"
       },
       {
         mesaj: "Bu sayfayı açtığına göre şu an üzgünsen bile gülümse. Modunu her zaman yüksek tut.",
-        resim: "elif3.jpeg"
+        resim: "elif2.jpeg"
       },
       {
         mesaj: "Hayat zor ama sen bugün +10 moral kazandın ✔️",
-        resim: "elif4.jpeg"
+        resim: "elif3.jpeg"
       },
       {
         mesaj: "Bu mesaj sponsoru: Elif’in iyi enerjisi ✨",
-        resim: "elif5.jpeg"
+        resim: "elif4.jpeg"
       }
     ];
 
@@ -98,16 +121,28 @@
     let index = 0;
 
     function surpriz() {
-      if (index < icerikler.length) {
-        document.getElementById("mesaj").innerText = icerikler[index].mesaj;
-        document.getElementById("surprizResim").src = icerikler[index].resim;
-        index++;
-      } else {
-        document.getElementById("mesaj").innerText = yeniYil.mesaj;
-        document.getElementById("surprizResim").src = yeniYil.resim;
-        document.getElementById("buton").disabled = true;
-        document.getElementById("buton").innerText = "🎁 Hepsi bu kadar";
-      }
+      const mesajEl = document.getElementById("mesaj");
+      const resimEl = document.getElementById("surprizResim");
+      const buton = document.getElementById("buton");
+
+      mesajEl.classList.remove("show");
+      resimEl.classList.remove("show");
+
+      setTimeout(() => {
+        if (index < icerikler.length) {
+          mesajEl.innerText = icerikler[index].mesaj;
+          resimEl.src = icerikler[index].resim;
+          index++;
+        } else {
+          mesajEl.innerText = yeniYil.mesaj;
+          resimEl.src = yeniYil.resim;
+          buton.disabled = true;
+          buton.innerText = "🎁 Hepsi bu kadar";
+        }
+
+        mesajEl.classList.add("show");
+        resimEl.classList.add("show");
+      }, 200);
     }
   </script>
 
