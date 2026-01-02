@@ -14,6 +14,7 @@
       justify-content: center;
       height: 100vh;
       margin: 0;
+      overflow: hidden;
     }
 
     .card {
@@ -23,27 +24,42 @@
       width: 320px;
       text-align: center;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      z-index: 2;
     }
 
-    /* Kapak görseli (ilk ekran) */
+    h2 {
+      margin-bottom: 10px;
+    }
+
     .kapak-img {
       width: 100%;
-      margin: 15px auto 10px;
+      margin: 15px auto 12px;
       border-radius: 12px;
-      display: block;
     }
 
-    /* Sonraki sürpriz görselleri */
     .surpriz-img {
       width: 140px;
-      height: auto;
       margin: 15px auto 10px;
       border-radius: 50%;
       display: block;
     }
 
-    button {
+    .giris-yazisi {
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 10px;
+    }
+
+    .message {
       margin-top: 18px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #111827;
+      min-height: 26px;
+    }
+
+    button {
+      margin-top: 20px;
       padding: 10px 20px;
       border: none;
       border-radius: 8px;
@@ -58,13 +74,6 @@
       cursor: default;
     }
 
-    .message {
-      margin-top: 18px;
-      font-size: 15px;
-      min-height: 22px; /* layout zıplamasın */
-    }
-
-    /* ✨ Soft animasyon */
     .fade {
       opacity: 0;
       transform: translateY(6px) scale(0.98);
@@ -75,89 +84,135 @@
       opacity: 1;
       transform: translateY(0) scale(1);
     }
+
+    /* 🎆 Havai fişek alanı */
+    canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
   </style>
 </head>
 
 <body>
 
-  <div class="card">
-    <h2>🐣 Selam Cankuşumm</h2>
+<canvas id="fireworks"></canvas>
 
-    <!-- İlk ekranda kapak görseli -->
-    <img id="kapakResim" src="kapak.jpeg" alt="Kapak" class="kapak-img fade show">
+<div class="card">
+  <h2>🐣 Selam Cankuşumm</h2>
 
-    <!-- Tıklayınca gösterilecek sürpriz görseli (başta gizli) -->
-    <img id="surprizResim" src="elif1.jpeg" alt="Sürpriz" class="surpriz-img fade" style="display:none;">
+  <img id="kapakResim" src="kapak.jpeg" class="kapak-img fade show">
+  <img id="surprizResim" src="elif1.jpeg" class="surpriz-img fade" style="display:none;">
 
-    <p>Bugün yüzün gülsün diye küçük bir sürpriz bırakıyorum buraya.</p>
+  <p id="girisYazisi" class="giris-yazisi fade show">
+    Bugün yüzün gülsün diye küçük bir sürpriz bırakıyorum buraya.
+  </p>
 
-    <button id="buton" onclick="surpriz()">Tıkla bakalım 👀</button>
+  <button id="buton" onclick="surpriz()">Tıkla bakalım 👀</button>
+  <div id="mesaj" class="message fade"></div>
+</div>
 
-    <div class="message fade show" id="mesaj"></div>
-  </div>
+<script>
+  const icerikler = [
+    { mesaj: "Bugün saçın güzel olmuş olabilir. Kontrol etmedim ama ihtimali çok yüksek 😄", resim: "elif2.jpeg" },
+    { mesaj: "Bu sayfayı açtığına göre şu an üzgünsen bile gülümse. Modunu her zaman yüksek tut.", resim: "elif3.jpeg" },
+    { mesaj: "Hayat zor ama sen bugün +10 moral kazandın ✔️", resim: "elif4.jpeg" },
+    { mesaj: "Bu mesaj sponsoru: Elif’in iyi enerjisi ✨", resim: "elif5.jpeg" }
+  ];
 
-  <script>
-    const icerikler = [
-      { mesaj: "Bugün saçın güzel olmuş olabilir. Kontrol etmedim ama ihtimali çok yüksek 😄", resim: "elif2.jpeg" },
-      { mesaj: "Bu sayfayı açtığına göre şu an üzgünsen bile gülümse. Modunu her zaman yüksek tut.", resim: "elif3.jpeg" },
-      { mesaj: "Hayat zor ama sen bugün +10 moral kazandın ✔️", resim: "elif4.jpeg" },
-      { mesaj: "Bu mesaj sponsoru: Elif’in iyi enerjisi ✨", resim: "elif5.jpeg" }
-    ];
+  const yeniYil = {
+    mesaj: "🎄✨ Yeni yıl sana sağlık, huzur ve bol bol gülümseme getirsin. İyi ki varsın Cankuşum. Sakın Kimse İçin Eğilme Tacın Düşmesin.🤍",
+    resim: "yeniyil.jpeg"
+  };
 
-    const yeniYil = {
-      mesaj: "🎄✨ Yeni yıl sana sağlık, huzur ve bol bol gülümseme getirsin. İyi ki varsın Cankuşum 🤍",
-      resim: "yeniyil.jpeg"
-    };
+  let index = 0;
 
-    let index = 0;
+  const kapakEl = document.getElementById("kapakResim");
+  const surprizEl = document.getElementById("surprizResim");
+  const girisYaziEl = document.getElementById("girisYazisi");
+  const mesajEl = document.getElementById("mesaj");
+  const buton = document.getElementById("buton");
 
-    const mesajEl = document.getElementById("mesaj");
-    const buton = document.getElementById("buton");
+  function softGecis(fn) {
+    [kapakEl, surprizEl, girisYaziEl, mesajEl].forEach(e => e.classList.remove("show"));
+    setTimeout(() => {
+      fn();
+      [kapakEl, surprizEl, mesajEl].forEach(e => e.classList.add("show"));
+    }, 220);
+  }
 
-    const kapakEl = document.getElementById("kapakResim");
-    const surprizEl = document.getElementById("surprizResim");
-
-    function softGecisYap(guncelleFn) {
-      mesajEl.classList.remove("show");
-      kapakEl.classList.remove("show");
-      surprizEl.classList.remove("show");
-
-      setTimeout(() => {
-        guncelleFn();
-        mesajEl.classList.add("show");
-        kapakEl.classList.add("show");
-        surprizEl.classList.add("show");
-      }, 220);
+  function surpriz() {
+    if (index === 0) {
+      softGecis(() => {
+        kapakEl.style.display = "none";
+        girisYaziEl.style.display = "none";
+        surprizEl.style.display = "block";
+        surprizEl.src = icerikler[0].resim;
+        mesajEl.innerText = icerikler[0].mesaj;
+        index = 1;
+      });
+      return;
     }
 
-    function surpriz() {
-      // İlk tık: kapak gizlensin, sürpriz resmi gösterilsin
-      if (index === 0) {
-        softGecisYap(() => {
-          kapakEl.style.display = "none";
-          surprizEl.style.display = "block";
-          surprizEl.src = icerikler[0].resim;
-          mesajEl.innerText = icerikler[0].mesaj;
-          index = 1;
-        });
-        return;
+    softGecis(() => {
+      if (index < icerikler.length) {
+        surprizEl.src = icerikler[index].resim;
+        mesajEl.innerText = icerikler[index].mesaj;
+        index++;
+      } else {
+        surprizEl.src = yeniYil.resim;
+        mesajEl.innerText = yeniYil.mesaj;
+        buton.disabled = true;
+        buton.innerText = "🎉 Mutlu Yıllar!";
+        baslatHavaiFisek();
       }
+    });
+  }
 
-      // Devam: sırayla sürprizler
-      softGecisYap(() => {
-        if (index < icerikler.length) {
-          surprizEl.src = icerikler[index].resim;
-          mesajEl.innerText = icerikler[index].mesaj;
-          index++;
-        } else {
-          surprizEl.src = yeniYil.resim;
-          mesajEl.innerText = yeniYil.mesaj;
-          buton.disabled = true;
-          buton.innerText = "🎁 Hepsi bu kadar";
-        }
+  /* 🎆 HAVAİ FİŞEK ANİMASYONU */
+  const canvas = document.getElementById("fireworks");
+  const ctx = canvas.getContext("2d");
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+
+  let particles = [];
+
+  function baslatHavaiFisek() {
+    for (let i = 0; i < 6; i++) {
+      setTimeout(patlat, i * 500);
+    }
+  }
+
+  function patlat() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height * 0.5;
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x, y,
+        angle: Math.random() * Math.PI * 2,
+        speed: Math.random() * 4 + 2,
+        life: 60,
+        color: `hsl(${Math.random()*360},100%,60%)`
       });
     }
-  </script>
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((p, i) => {
+      p.x += Math.cos(p.angle) * p.speed;
+      p.y += Math.sin(p.angle) * p.speed;
+      p.life--;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, 3, 3);
+      if (p.life <= 0) particles.splice(i, 1);
+    });
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
 
 </body>
 </html>
