@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Elif’e Mini Sürpriz</title>
+
+  <!-- Mobil uyum (iPhone için) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
       background: #f5f7fa;
@@ -11,7 +15,9 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      margin: 0;
     }
+
     .card {
       background: white;
       padding: 30px;
@@ -20,6 +26,15 @@
       text-align: center;
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
+
+    .surpriz-img {
+      width: 120px;
+      height: auto;
+      margin: 15px auto;
+      border-radius: 50%;
+      display: block;
+    }
+
     button {
       margin-top: 20px;
       padding: 10px 20px;
@@ -30,39 +45,56 @@
       font-size: 16px;
       cursor: pointer;
     }
+
     button:hover {
       background: #4338ca;
     }
+
     .message {
       margin-top: 20px;
       font-size: 15px;
     }
   </style>
 </head>
+
 <body>
 
   <div class="card">
-    <h2>👋 Selam Elif</h2>
-    <p>Bugün yüzün gülsün diye küçük bir şey bıraktım buraya.</p>
+    <h2>🐣 Selam Cankuşumm</h2>
+
+    <img id="surprizResim" src="elif.png" alt="Sürpriz" class="surpriz-img">
+
+    <p>Bugün yüzün gülsün diye küçük bir süpriz bırakıyorum buraya.</p>
+
     <button onclick="surpriz()">Tıkla bakalım 👀</button>
+
     <div class="message" id="mesaj"></div>
   </div>
 
   <script>
     const mesajlar = [
-      "Bugün saçın güzel olmuş olabilir. Kontrol etmedim ama ihtimal yüksek 😄",
-      "Bu sayfayı açtığına göre şu an gülümsüyorsun. Evet, yakalandın.",
+      "Bugün saçın güzel olmuş olabilir. Kontrol etmedim ama ihtimali çok yüksek 😄",
+      "Bu sayfayı açtığına göre şu an üzgünsen bile gülümse. Modunu Herzaman yüksek tut.",
       "Hayat zor ama sen bugün +10 moral kazandın ✔️",
-      "Bu mesaj sponsoru: Elif’in iyi enerjisi ✨",
+      "Bu mesaj sponsoru: Cankuşumun iyi enerjisi ✨",
       "Şu an çok önemli bir şey yapıyorsun: Gülüyorsun."
     ];
 
+    const resimler = [
+      "elif.png",
+      "elif.png(2)",
+      "elif.png(3)",
+      "elif.png(4)"
+    ];
+
     function surpriz() {
-      const rastgele = Math.floor(Math.random() * mesajlar.length);
-      document.getElementById("mesaj").innerText = mesajlar[rastgele];
+      const rastgeleMesaj = Math.floor(Math.random() * mesajlar.length);
+      const rastgeleResim = Math.floor(Math.random() * resimler.length);
+
+      document.getElementById("mesaj").innerText = mesajlar[rastgeleMesaj];
+      document.getElementById("surprizResim").src = resimler[rastgeleResim];
     }
   </script>
 
 </body>
 </html>
-
