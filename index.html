@@ -25,22 +25,25 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     }
 
+    /* Kapak görseli (ilk ekran) */
+    .kapak-img {
+      width: 100%;
+      margin: 15px auto 10px;
+      border-radius: 12px;
+      display: block;
+    }
+
+    /* Sonraki sürpriz görselleri */
     .surpriz-img {
       width: 140px;
       height: auto;
-      margin: 15px auto;
+      margin: 15px auto 10px;
       border-radius: 50%;
       display: block;
     }
 
-    .kapak-img {
-      width: 100%;
-      margin-top: 15px;
-      border-radius: 12px;
-    }
-
     button {
-      margin-top: 20px;
+      margin-top: 18px;
       padding: 10px 20px;
       border: none;
       border-radius: 8px;
@@ -56,20 +59,21 @@
     }
 
     .message {
-      margin-top: 20px;
+      margin-top: 18px;
       font-size: 15px;
+      min-height: 22px; /* layout zıplamasın */
     }
 
     /* ✨ Soft animasyon */
     .fade {
       opacity: 0;
-      transform: scale(0.96);
-      transition: all 0.4s ease;
+      transform: translateY(6px) scale(0.98);
+      transition: all 0.45s ease;
     }
 
     .fade.show {
       opacity: 1;
-      transform: scale(1);
+      transform: translateY(0) scale(1);
     }
   </style>
 </head>
@@ -79,14 +83,13 @@
   <div class="card">
     <h2>🐣 Selam Cankuşumm</h2>
 
-    <!-- Değişen ana resim -->
-    <img id="surprizResim" src="elif1.jpeg" alt="Sürpriz"
-         class="surpriz-img fade show">
+    <!-- İlk ekranda kapak görseli -->
+    <img id="kapakResim" src="kapak.jpeg" alt="Kapak" class="kapak-img fade show">
+
+    <!-- Tıklayınca gösterilecek sürpriz görseli (başta gizli) -->
+    <img id="surprizResim" src="elif1.jpeg" alt="Sürpriz" class="surpriz-img fade" style="display:none;">
 
     <p>Bugün yüzün gülsün diye küçük bir sürpriz bırakıyorum buraya.</p>
-
-    <!-- Sabit kapak resmi -->
-    <img src="kapak.jpeg" alt="Kapak" class="kapak-img">
 
     <button id="buton" onclick="surpriz()">Tıkla bakalım 👀</button>
 
@@ -95,22 +98,10 @@
 
   <script>
     const icerikler = [
-      {
-        mesaj: "Bugün saçın güzel olmuş olabilir. Kontrol etmedim ama ihtimali çok yüksek 😄",
-        resim: "elif1.jpeg"
-      },
-      {
-        mesaj: "Bu sayfayı açtığına göre şu an üzgünsen bile gülümse. Modunu her zaman yüksek tut.",
-        resim: "elif2.jpeg"
-      },
-      {
-        mesaj: "Hayat zor ama sen bugün +10 moral kazandın ✔️",
-        resim: "elif3.jpeg"
-      },
-      {
-        mesaj: "Bu mesaj sponsoru: Elif’in iyi enerjisi ✨",
-        resim: "elif4.jpeg"
-      }
+      { mesaj: "Bugün saçın güzel olmuş olabilir. Kontrol etmedim ama ihtimali çok yüksek 😄", resim: "elif2.jpeg" },
+      { mesaj: "Bu sayfayı açtığına göre şu an üzgünsen bile gülümse. Modunu her zaman yüksek tut.", resim: "elif3.jpeg" },
+      { mesaj: "Hayat zor ama sen bugün +10 moral kazandın ✔️", resim: "elif4.jpeg" },
+      { mesaj: "Bu mesaj sponsoru: Elif’in iyi enerjisi ✨", resim: "elif5.jpeg" }
     ];
 
     const yeniYil = {
@@ -120,29 +111,51 @@
 
     let index = 0;
 
-    function surpriz() {
-      const mesajEl = document.getElementById("mesaj");
-      const resimEl = document.getElementById("surprizResim");
-      const buton = document.getElementById("buton");
+    const mesajEl = document.getElementById("mesaj");
+    const buton = document.getElementById("buton");
 
+    const kapakEl = document.getElementById("kapakResim");
+    const surprizEl = document.getElementById("surprizResim");
+
+    function softGecisYap(guncelleFn) {
       mesajEl.classList.remove("show");
-      resimEl.classList.remove("show");
+      kapakEl.classList.remove("show");
+      surprizEl.classList.remove("show");
 
       setTimeout(() => {
+        guncelleFn();
+        mesajEl.classList.add("show");
+        kapakEl.classList.add("show");
+        surprizEl.classList.add("show");
+      }, 220);
+    }
+
+    function surpriz() {
+      // İlk tık: kapak gizlensin, sürpriz resmi gösterilsin
+      if (index === 0) {
+        softGecisYap(() => {
+          kapakEl.style.display = "none";
+          surprizEl.style.display = "block";
+          surprizEl.src = icerikler[0].resim;
+          mesajEl.innerText = icerikler[0].mesaj;
+          index = 1;
+        });
+        return;
+      }
+
+      // Devam: sırayla sürprizler
+      softGecisYap(() => {
         if (index < icerikler.length) {
+          surprizEl.src = icerikler[index].resim;
           mesajEl.innerText = icerikler[index].mesaj;
-          resimEl.src = icerikler[index].resim;
           index++;
         } else {
+          surprizEl.src = yeniYil.resim;
           mesajEl.innerText = yeniYil.mesaj;
-          resimEl.src = yeniYil.resim;
           buton.disabled = true;
           buton.innerText = "🎁 Hepsi bu kadar";
         }
-
-        mesajEl.classList.add("show");
-        resimEl.classList.add("show");
-      }, 200);
+      });
     }
   </script>
 
