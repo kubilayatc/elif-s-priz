@@ -90,7 +90,10 @@
       }
     ];
 
-    const yeniYilMesaji = "🎄✨ Yeni yıl sana sağlık, huzur ve bol bol gülümseme getirsin. İyi ki varsın Cankuşum 🤍";
+    const yeniYil = {
+      mesaj: "🎄✨ Yeni yıl sana sağlık, huzur ve bol bol gülümseme getirsin. İyi ki varsın Cankuşum 🤍",
+      resim: "yeniyil.jpeg"
+    };
 
     let index = 0;
 
@@ -100,7 +103,8 @@
         document.getElementById("surprizResim").src = icerikler[index].resim;
         index++;
       } else {
-        document.getElementById("mesaj").innerText = yeniYilMesaji;
+        document.getElementById("mesaj").innerText = yeniYil.mesaj;
+        document.getElementById("surprizResim").src = yeniYil.resim;
         document.getElementById("buton").disabled = true;
         document.getElementById("buton").innerText = "🎁 Hepsi bu kadar";
       }
