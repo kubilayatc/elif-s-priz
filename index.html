@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Elif’e Mini Sürpriz</title>
+  <style>
+    body {
+      background: #f5f7fa;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #4f46e5;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #4338ca;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>👋 Selam Elif</h2>
+    <p>Bugün yüzün gülsün diye küçük bir şey bıraktım buraya.</p>
+    <button onclick="surpriz()">Tıkla bakalım 👀</button>
+    <div class="message" id="mesaj"></div>
+  </div>
+
+  <script>
+    const mesajlar = [
+      "Bugün saçın güzel olmuş olabilir. Kontrol etmedim ama ihtimal yüksek 😄",
+      "Bu sayfayı açtığına göre şu an gülümsüyorsun. Evet, yakalandın.",
+      "Hayat zor ama sen bugün +10 moral kazandın ✔️",
+      "Bu mesaj sponsoru: Elif’in iyi enerjisi ✨",
+      "Şu an çok önemli bir şey yapıyorsun: Gülüyorsun."
+    ];
+
+    function surpriz() {
+      const rastgele = Math.floor(Math.random() * mesajlar.length);
+      document.getElementById("mesaj").innerText = mesajlar[rastgele];
+    }
+  </script>
+
+</body>
+</html>
 
