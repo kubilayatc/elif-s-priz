@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Elif’e Mini Sürpriz</title>
-
-  <!-- Mobil uyum (iPhone için) -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -28,7 +26,7 @@
     }
 
     .surpriz-img {
-      width: 120px;
+      width: 140px;
       height: auto;
       margin: 15px auto;
       border-radius: 50%;
@@ -46,8 +44,9 @@
       cursor: pointer;
     }
 
-    button:hover {
-      background: #4338ca;
+    button:disabled {
+      background: #9ca3af;
+      cursor: default;
     }
 
     .message {
@@ -62,38 +61,49 @@
   <div class="card">
     <h2>🐣 Selam Cankuşumm</h2>
 
-    <img id="surprizResim" src="elif.png" alt="Sürpriz" class="surpriz-img">
+    <img id="surprizResim" src="elif1.jpeg" alt="Sürpriz" class="surpriz-img">
 
-    <p>Bugün yüzün gülsün diye küçük bir süpriz bırakıyorum buraya.</p>
+    <p>Bugün yüzün gülsün diye küçük bir sürpriz bırakıyorum buraya.</p>
 
-    <button onclick="surpriz()">Tıkla bakalım 👀</button>
+    <button id="buton" onclick="surpriz()">Tıkla bakalım 👀</button>
 
     <div class="message" id="mesaj"></div>
   </div>
 
   <script>
-    const mesajlar = [
-      "Bugün saçın güzel olmuş olabilir. Kontrol etmedim ama ihtimali çok yüksek 😄",
-      "Bu sayfayı açtığına göre şu an üzgünsen bile gülümse. Modunu Herzaman yüksek tut.",
-      "Hayat zor ama sen bugün +10 moral kazandın ✔️",
-      "Bu mesaj sponsoru: Cankuşumun iyi enerjisi ✨",
-      "Şu an çok önemli bir şey yapıyorsun: Gülüyorsun."
+    const icerikler = [
+      {
+        mesaj: "Bugün saçın güzel olmuş olabilir. Kontrol etmedim ama ihtimali çok yüksek 😄",
+        resim: "elif1.jpeg"
+      },
+      {
+        mesaj: "Bu sayfayı açtığına göre şu an üzgünsen bile gülümse. Modunu her zaman yüksek tut.",
+        resim: "elif2.jpeg"
+      },
+      {
+        mesaj: "Hayat zor ama sen bugün +10 moral kazandın ✔️",
+        resim: "elif3.jpeg"
+      },
+      {
+        mesaj: "Bu mesaj sponsoru: Elif’in iyi enerjisi ✨",
+        resim: "elif4.jpeg"
+      }
     ];
 
-  const resimler = [
-  "elif1.jpeg",
-  "elif2.jpeg",
-  "elif3.jpeg",
-  "elif4.jpeg"
+    const yeniYilMesaji = "🎄✨ Yeni yıl sana sağlık, huzur ve bol bol gülümseme getirsin. İyi ki varsın Cankuşum 🤍";
 
-    ];
+    let index = 0;
 
     function surpriz() {
-      const rastgeleMesaj = Math.floor(Math.random() * mesajlar.length);
-      const rastgeleResim = Math.floor(Math.random() * resimler.length);
-
-      document.getElementById("mesaj").innerText = mesajlar[rastgeleMesaj];
-      document.getElementById("surprizResim").src = resimler[rastgeleResim];
+      if (index < icerikler.length) {
+        document.getElementById("mesaj").innerText = icerikler[index].mesaj;
+        document.getElementById("surprizResim").src = icerikler[index].resim;
+        index++;
+      } else {
+        document.getElementById("mesaj").innerText = yeniYilMesaji;
+        document.getElementById("buton").disabled = true;
+        document.getElementById("buton").innerText = "🎁 Hepsi bu kadar";
+      }
     }
   </script>
 
